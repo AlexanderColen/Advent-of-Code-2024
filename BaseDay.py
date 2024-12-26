@@ -39,5 +39,3 @@ class BaseDay:
         with open(input_path, 'r') as file:
             lines = [line.rstrip() for line in file]
         return lines
-
-
