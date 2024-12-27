@@ -1,4 +1,5 @@
 from importlib import import_module
+from datetime import datetime
 
 allowed_days = [f'{i}' for i in range(1, 26)]
 day_no = None
@@ -22,9 +23,15 @@ try:
     puzzle_2 = getattr(day_class, 'puzzle_2')
 
     if puzzle_no in ['1', 'both']:
+        start = datetime.now()
         puzzle_1()
+        end = datetime.now()
+        print(f'Puzzle 1 finished in {end - start}')
 
     if puzzle_no in ['2', 'both']:
+        start = datetime.now()
         puzzle_2()
+        end = datetime.now()
+        print(f'Puzzle 2 finished in {end - start}')
 except ModuleNotFoundError:
     raise ModuleNotFoundError(f'Module "{class_str}" does not exist (yet).')
