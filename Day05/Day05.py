@@ -74,16 +74,11 @@ class Day05(BaseDay):
             # Extract all rules between all the numbers
             page_nos = incorrect_update.split(',')
             possible_page_pairs = combinations(page_nos, 2)
-            page_regexes = []
+            possible_rules = []
             for pair in possible_page_pairs:
-                page_regexes.append(r'\|'.join(pair))
-                page_regexes.append(r'\|'.join([pair[-1], pair[0]]))
-            relevant_rules = []
-            for page_regex in page_regexes:
-                for rule in rules:
-                    if re.search(page_regex, rule):
-                        relevant_rules.append(rule)
-                        break
+                possible_rules.append(r'\|'.join(pair))
+                possible_rules.append(r'\|'.join([pair[-1], pair[0]]))
+            relevant_rules = [rule for rule in rules if rule in possible_rules]
 
             # Count how many times each number is the start of a pair.
             page_counts = {}
