@@ -10,7 +10,7 @@ from BaseDay import BaseDay
 
 
 class Day07(BaseDay):
-    def attempt_operator(self, values: list, operator: str, desire: int) -> bool:
+    def attempt_operator(self, values: list, operator: str, desire: int, allow_concat: bool = False) -> bool:
         if any([value > desire for value in values]):
             return False
 
@@ -19,6 +19,8 @@ class Day07(BaseDay):
             calculated_value = values[0] + values[1]
         elif operator == '*':
             calculated_value = values[0] * values[1]
+        elif allow_concat and operator == '||':
+            calculated_value = int(f'{values[0]}{values[1]}')
 
         if len(values) - 2 == 0:
             return calculated_value == desire
@@ -30,12 +32,19 @@ class Day07(BaseDay):
         return self.attempt_operator(
             values=new_values,
             operator='+',
-            desire=desire
+            desire=desire,
+            allow_concat=allow_concat
         ) or self.attempt_operator(
             values=new_values,
             operator='*',
-            desire=desire
-        )
+            desire=desire,
+            allow_concat=allow_concat
+        ) or (allow_concat and self.attempt_operator(
+            values=new_values,
+            operator='||',
+            desire=desire,
+            allow_concat=allow_concat
+        ))
 
     def puzzle_1(self):
         input_data = self.get_input_lines()
@@ -51,3 +60,19 @@ class Day07(BaseDay):
                 calibration_result += desire
 
         print(f'The total calibration result with + and * is {calibration_result}.')
+
+    def puzzle_2(self):
+        input_data = self.get_input_lines()
+
+        calibration_result = 0
+        for line in input_data:
+            desire, values = line.split(': ')
+            desire = int(desire)
+            values = [int(value) for value in values.strip().split(' ')]
+
+            if self.attempt_operator(values=values, operator='+', desire=desire, allow_concat=True) \
+                    or self.attempt_operator(values=values, operator='*', desire=desire, allow_concat=True) \
+                    or self.attempt_operator(values=values, operator='||', desire=desire, allow_concat=True):
+                calibration_result += desire
+
+        print(f'The total calibration result with +, * and || is {calibration_result}.')
